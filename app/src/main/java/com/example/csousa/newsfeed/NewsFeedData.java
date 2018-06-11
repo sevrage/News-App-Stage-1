@@ -13,19 +13,6 @@ public class NewsFeedData {
 
     public NewsFeedData(final String id, final String type, final String sectionId,
                         final String sectionName, final String webPublicationDate, final String webTitle,
-                        final String webUrl) {
-        this.id = id;
-        this.type = type;
-        this.sectionId = sectionId;
-        this.sectionName = sectionName;
-        this.webPublicationDate = webPublicationDate;
-        this.webTitle = webTitle;
-        this.webUrl = webUrl;
-
-    }
-
-    public NewsFeedData(final String id, final String type, final String sectionId,
-                        final String sectionName, final String webPublicationDate, final String webTitle,
                         final String webUrl, final String contributor) {
         this.id = id;
         this.type = type;
@@ -67,6 +54,9 @@ public class NewsFeedData {
     }
 
     public String getContributor() {
+        if (contributor == null) {
+            return "";
+        }
         return contributor;
     }
 }

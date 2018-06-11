@@ -85,24 +85,12 @@ public class NewsFeedHandler {
                 //if show-tags=contributor is enable and filled, use it to get author name
                 if (tagsArray.length() > 0) {
                     JSONObject tags = tagsArray.getJSONObject(0);
-                    String contributorName = tags.getString("webTitle");
-
-                    // Create a new {@link NewsFeedData} object with author
-                    newsFeeds.add(new NewsFeedData(id, type, sectionId, sectionName,
-                            webPublicationDate, webTitle, webUrl, contributorName));
-
-                }else{
-                    if (author == null){
-                        // Create a new {@link NewsFeedData} object without author
-                        newsFeeds.add(new NewsFeedData(id, type, sectionId, sectionName,
-                                webPublicationDate, webTitle, webUrl));
-                    }else{
-                        // Create a new {@link NewsFeedData} object with author
-                        newsFeeds.add(new NewsFeedData(id, type, sectionId, sectionName,
-                                webPublicationDate, webTitle, webUrl, author));
-                    }
-
+                    author = tags.getString("webTitle");
                 }
+
+                newsFeeds.add(new NewsFeedData(id, type, sectionId, sectionName,
+                        webPublicationDate, webTitle, webUrl, author));
+
             }
 
         } catch (JSONException e) {

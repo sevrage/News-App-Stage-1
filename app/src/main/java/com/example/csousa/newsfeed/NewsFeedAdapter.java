@@ -14,6 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * An {@link NewsFeedAdapter} knows how to create a list item layout for each newsFeed
  * in the data source (a list of {@link NewsFeedData} objects).
@@ -22,7 +25,6 @@ import java.util.List;
  * to be displayed to the user.
  */
 public class NewsFeedAdapter extends ArrayAdapter<NewsFeedData> {
-
     /**
      * Constructs a new {@link NewsFeedAdapter}.
      *
@@ -38,29 +40,29 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeedData> {
      * in the list of newsFeeds.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Check if there is an existing list item view (called convertView) that we can reuse,
-        // otherwise, if convertView is null, then inflate a new list item layout.
-        View listItemView = convertView;
-        if (listItemView == null) {
+    public View getView(int position, View listItemView, ViewGroup parent) {
+        // if listItemView is null, then inflate a new list item layout.
+
+        ViewHolder holder;
+        if (listItemView != null) {
+            holder = (ViewHolder) listItemView.getTag();
+        } else {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.list_news_feed, parent, false);
+            holder = new ViewHolder(listItemView);
+            listItemView.setTag(holder);
         }
 
-        // Find the newsfeed at the given position in the list of newsFeeds
+        // Find the newsFeed at the given position in the list of newsFeeds
         NewsFeedData currentNewsFeed = getItem(position);
 
         // Set section name value
-        TextView sectionNameView = (TextView) listItemView.findViewById(R.id.section_name);
         String sectionName = currentNewsFeed.getSectionName();
-        sectionNameView.setText(sectionName);
-
+        holder.sectionName.setText(sectionName);
 
         // Set news title value
-        TextView titleView = (TextView) listItemView.findViewById(R.id.title);
         String title = currentNewsFeed.getWebTitle();
-        titleView.setText(title);
-
+        holder.title.setText(title);
 
         // Process Publication Date to get Date and Time values
         String webPublicationDate = currentNewsFeed.getWebPublicationDate();
@@ -72,21 +74,16 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeedData> {
             e.printStackTrace();
         }
         // Set publication date value
-        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         String formattedDate = formatDate(dateObject);
-        dateView.setText(formattedDate);
+        holder.date.setText(formattedDate);
 
         // Set publication time value
-        TextView timeView = (TextView) listItemView.findViewById(R.id.time);
         String formattedTime = formatTime(dateObject);
-        timeView.setText(formattedTime);
-
+        holder.time.setText(formattedTime);
 
         // Set author value
-        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
         String author = currentNewsFeed.getContributor();
-        authorView.setText(author);
-
+        holder.author.setText(author);
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;
@@ -107,5 +104,17 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeedData> {
     private String formatTime(Date dateObject) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
         return timeFormat.format(dateObject);
+    }
+
+    static class ViewHolder {
+        @BindView(R.id.section_name) TextView sectionName;
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.date) TextView date;
+        @BindView(R.id.time) TextView time;
+        @BindView(R.id.author) TextView author;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }
